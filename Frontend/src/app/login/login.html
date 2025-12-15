@@ -1,32 +1,36 @@
 <!-- login.component.html -->
 <p-card header="Sign in" styleClass="login-card">
-  <form (ngSubmit)="onSubmit()" class="login-form">
+  <div class="login-form">
     <div class="field">
-      <label for="email">Email</label>
-      <input id="email" type="email" pInputText placeholder="you@example.com" />
+      <label for="email">Username</label>
+      <input
+        id="username"
+        type="text"
+        pInputText
+        placeholder="Username or E-Mail"
+        [(ngModel)]="username"
+      />
     </div>
 
     <div class="field">
       <label for="password">Password</label>
-      <p-password id="password" toggleMask="true" inputStyleClass="w-full"></p-password>
-    </div>
-
-    <div class="field checkbox-row">
-      <p-checkbox binary="true"></p-checkbox>
-      <label for="remember">Remember me</label>
+      <input
+        id="password"
+        toggleMask="true"
+        inputStyleClass="w-full"
+        pInputText
+        type="password"
+        [(ngModel)]="password"
+      />
     </div>
 
     <button
       pButton
-      type="submit"
       label="Sign in"
       class="w-full"
       [disabled]="loading"
       [icon]="loading ? 'pi pi-spin pi-spinner' : ''"
+      (click)="login()"
     ></button>
-  </form>
-
-  <div class="help-row">
-    <a (click)="forgotPassword()">Forgot password?</a>
   </div>
 </p-card>

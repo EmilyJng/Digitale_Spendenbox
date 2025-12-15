@@ -1,9 +1,15 @@
 <p-menubar [model]="items">
   <ng-template #end>
     <div class="flex items-center gap-2">
-      <a pRipple class="flex items-center px-4 py-3 cursor-pointer gap-2" routerLink="/login">
+      @if (!this.isLoggedIn()) {
+      <a pRipple class="flex items-center px-4 py-3 cursor-pointer gap-2" (click)="login()">
         <span>Login</span>
       </a>
+      } @else {
+      <a pRipple class="flex items-center px-4 py-3 cursor-pointer gap-2" (click)="logout()">
+        <span>Logout</span>
+      </a>
+      }
     </div>
   </ng-template>
 </p-menubar>

@@ -1,19 +1,20 @@
-import { Injectable } from "@angular/core";
+import { Injectable, signal } from "@angular/core";
 
 @Injectable({
 	providedIn: "root",
 })
 export class Auth {
-	isLoggedIn = false;
+	isLoggedIn = signal(false);
 
 	login(username: string, password: string) {
 		// Simulate login process
 		if (username === "admin" && password === "password") {
-			this.isLoggedIn = true;
+			this.isLoggedIn.set(true)
 		}
+		return this.isLoggedIn;
 	}
 
 	logout() {
-		this.isLoggedIn = false;
+		this.isLoggedIn.set(false);
 	}
 }
