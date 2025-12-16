@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { Auth } from '../auth';
 import { Router } from '@angular/router';
+import { CardModule } from 'primeng/card';
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  imports: [CardModule],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

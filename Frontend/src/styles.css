@@ -1,2 +1,7 @@
 @import 'tailwindcss';
 @import 'tailwindcss-primeui';
+
+body {
+  height: 100dvh;
+  width: 100dvw;
+}

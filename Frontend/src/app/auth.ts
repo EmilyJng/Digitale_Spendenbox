@@ -6,6 +6,8 @@ import { Injectable, signal } from "@angular/core";
 export class Auth {
 	isLoggedIn = signal(false);
 
+
+
 	login(username: string, password: string) {
 		// Simulate login process
 		if (username === "admin" && password === "password") {
