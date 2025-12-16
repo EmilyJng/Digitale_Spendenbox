@@ -1,0 +1,29 @@
+<p-card header="Create Campagne" styleClass="campain-card">
+  <div class="campain-form">
+    <div class="field">
+      <label>Kampangnentitel</label>
+      <input type="text" pInputText [(ngModel)]="title" />
+    </div>
+    <div class="field">
+      <label>Beschreibung</label>
+      <input type="text" pInputText [(ngModel)]="describtion" />
+    </div>
+    <div class="field">
+      <label>Zielbetrag</label>
+      <p-inputnumber
+        [(ngModel)]="donationGoal"
+        mode="decimal"
+        inputId="withoutgrouping"
+        [useGrouping]="false"
+      />
+    </div>
+    <div class="field">
+      <label>Kampagnenende</label>
+      <p-datepicker [(ngModel)]="endDate" [showIcon]="true" inputId="buttondisplay" />
+    </div>
+    <div class="field">
+      <label>Kampagnenbild</label>
+      <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onUpload($event)" />
+      <p-button label="Upload" (onClick)="fu.upload()" severity="secondary" />
+  </div>
+</p-card>
