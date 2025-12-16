@@ -27,9 +27,13 @@ export class App {
   }
 
 	items: MenuItem[] = [
-		{
-			label: "Home",
-			routerLink: "/",
+  	{
+  		label: "Home",
+  		routerLink: "/",
+  	},
+	  {
+			label: "Dashboard",
+			routerLink: "/dashboard",
 		},
 	];
 }

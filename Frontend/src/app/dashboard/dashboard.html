@@ -1,11 +1,27 @@
 <div class="flex gap-7 justify-center items-center mt-10">
-  <p-card header="Simple Card">
-    <p class="m-0">Lorem ipsum dolor sit amet...</p>
+  <p-card header="Spendenbarometer" class="w-4xl">
+    <ag-charts [options]="options" class="w-full h-full block"></ag-charts>
   </p-card>
-  <p-card header="Simple Card">
-    <p class="m-0">Lorem ipsum dolor sit amet...</p>
-  </p-card>
-  <p-card header="Simple Card">
-    <p class="m-0">Lorem ipsum dolor sit amet...</p>
+</div>
+<div class="flex gap-7 justify-center items-center mt-10">
+  <p-card header="Spendenliste" class="w-4xl">
+    <div class="max-h-96 overflow-auto">
+      <p-table [value]="donors" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template #header>
+          <tr>
+            <th>Name</th>
+            <th>E-Mail</th>
+            <th>Summe</th>
+          </tr>
+        </ng-template>
+        <ng-template #body let-donor>
+          <tr>
+            <td>{{ donor.name }}</td>
+            <td>{{ donor.email }}</td>
+            <td>{{ donor.amount }}€</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
   </p-card>
 </div>
