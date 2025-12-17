@@ -19,6 +19,7 @@ import {
 } from "ag-grid-community";
 import { providePrimeNG } from "primeng/config";
 import { routes } from "./app.routes";
+import { provideNgxStripe } from 'ngx-stripe';
 
 AgChartsModuleRegistry.registerModules([AgChartsCommunityModule]);
 AgGridModuleRegistry.registerModules([AgGridCommunityModule]);
@@ -29,6 +30,7 @@ export const appConfig: ApplicationConfig = {
 		provideZonelessChangeDetection(),
 		provideRouter(routes),
 		provideClientHydration(withEventReplay()),
+		provideNgxStripe(),
 		providePrimeNG({
 			theme: {
 				preset: Aura,

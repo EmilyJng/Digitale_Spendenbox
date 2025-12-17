@@ -23,7 +23,17 @@
     </div>
     <div class="field">
       <label>Kampagnenbild</label>
-      <p-fileupload #fu mode="basic" chooseLabel="Choose" chooseIcon="pi pi-upload" name="demo[]" url="https://www.primefaces.org/cdn/api/upload.php" accept="image/*" maxFileSize="1000000" (onUpload)="onUpload($event)" />
+      <p-fileupload
+        #fu
+        mode="basic"
+        chooseLabel="Choose"
+        chooseIcon="pi pi-upload"
+        name="demo[]"
+        url="https://www.primefaces.org/cdn/api/upload.php"
+        accept="image/*"
+        maxFileSize="1000000"
+        (onUpload)="onUpload($event)"
+      />
       <p-button label="Upload" (onClick)="fu.upload()" severity="secondary" />
-  </div>
-</p-card>
+    </div></div
+></p-card>

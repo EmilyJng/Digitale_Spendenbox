@@ -34,6 +34,7 @@
     "@angular/ssr": "^21.0.2",
     "@faker-js/faker": "^10.1.0",
     "@primeuix/themes": "^2.0.2",
+    "@stripe/stripe-js": "^8.6.0",
     "@types/clone": "^2.1.4",
     "ag-charts-angular": "^13.0.0",
     "ag-grid-angular": "^35.0.0",
@@ -42,11 +43,13 @@
     "clsx": "^2.1.1",
     "express": "^5.1.0",
     "lucide-angular": "^0.556.0",
+    "ngx-stripe": "^21.8.0",
     "primeng": "^21.0.1",
     "rxjs": "~7.8.0",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-primeui": "^0.6.1",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@angular/build": "^21.0.2",

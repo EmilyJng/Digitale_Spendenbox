@@ -1,2 +1,4 @@
 Backend/node_modules
 .zed
+Backend/.env
+Frontend/src/environments/environment.dev.ts

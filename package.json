@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "dev": "cd ./Frontend && bun run start && cd ../Backend && bun run index.js"
+  }
+}

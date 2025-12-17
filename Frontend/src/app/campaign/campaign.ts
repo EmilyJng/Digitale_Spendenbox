@@ -5,9 +5,10 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { CardModule } from 'primeng/card';
 import { FileUploadModule } from 'primeng/fileupload';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
-  selector: 'app-campange',
+  selector: 'app-campain',
   imports: [
     InputTextModule,
     FormsModule,
@@ -15,14 +16,20 @@ import { FileUploadModule } from 'primeng/fileupload';
     DatePickerModule,
     CardModule,
     FileUploadModule,
+    ButtonModule
   ],
-  templateUrl: './campange.html',
-  styleUrl: './campange.css',
+  templateUrl: './campaign.html',
+  styleUrl: './campaign.css',
 })
-export class Campange {
+export class Campaign {
   public title: string = '';
   public describtion: string = '';
   public donationGoal: number = 0;
   public endDate: Date = new Date();
   public imagePath: string = '';
+
+  onUpload(event: any) {
+    const file = event.files[0];
+    this.imagePath = URL.createObjectURL(file);
+  }
 }

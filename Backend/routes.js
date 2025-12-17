@@ -56,9 +56,10 @@ router.post('/register', async (req, res) => {
         res.status(201).json({ message: 'Benutzer erfolgreich registriert.' });
     } catch (err) {
         // SQLite Fehlercode 19 ist UNIQUE Constraint Failed
-        if (err.errno === 19) { 
+        if (err.errno === 19) {
             return res.status(409).json({ message: 'Diese E-Mail-Adresse wird bereits verwendet.' });
         }
+        console.log(err)
         res.status(500).json({ message: 'Interner Serverfehler bei der Registrierung.' });
     }
 });
@@ -80,6 +81,7 @@ router.post('/login', async (req, res) => {
         res.json({ token, userId: user.id });
 
     } catch (err) {
+      console.log(err)
         res.status(500).json({ message: 'Interner Serverfehler beim Login.' });
     }
 });
@@ -94,17 +96,17 @@ router.get('/campaigns', async (req, res) => {
     try {
         const sql = `
             SELECT id, name, goal_amount, current_amount, image_url
-            FROM Campaigns 
+            FROM Campaigns
             WHERE is_active = 1
             ORDER BY created_at DESC
         `;
         const campaigns = await allAsync(req.db, sql);
-        
+
         // Fügt den Namen des letzten Spenders hinzu (könnte in der Kampagnen-Tabelle gespeichert werden)
         // Alternative: Letzte Spende aus der Donations-Tabelle abrufen
         for (const campaign of campaigns) {
-            const lastDonor = await getAsync(req.db, 
-                'SELECT donor_name FROM Donations WHERE campaign_id = ? AND payment_status = "succeeded" ORDER BY created_at DESC LIMIT 1', 
+            const lastDonor = await getAsync(req.db,
+                'SELECT donor_name FROM Donations WHERE campaign_id = ? AND payment_status = "succeeded" ORDER BY created_at DESC LIMIT 1',
                 [campaign.id]
             );
             campaign.last_donor_name = lastDonor ? lastDonor.donor_name : 'Noch keine Spende';
@@ -132,7 +134,7 @@ router.post('/campaigns', authorize, async (req, res) => {
             VALUES (?, ?, ?, ?, ?, ?)
         `;
         const result = await runAsync(req.db, sql, [userId, name, goal_amount, target_payment_id, image_url, description]);
-        
+
         res.status(201).json({ message: 'Aktion erfolgreich erstellt.', campaignId: result.lastID });
     } catch (err) {
         console.error(err);
@@ -148,30 +150,30 @@ router.post('/campaigns', authorize, async (req, res) => {
 // API-Endpunkt, der den Payment Intent für das Frontend erstellt
 router.post('/donate/create-intent', async (req, res) => {
     const { amount, campaignId } = req.body;
-    
+
     if (amount < 0.5 || !campaignId) {
         return res.status(400).json({ message: 'Ungültiger Betrag oder Kampagnen-ID.' });
     }
 
     try {
         // Holen Sie die Ziel-ID (z.B. Stripe Connected Account ID)
-        const campaign = await getAsync(req.db, 'SELECT target_payment_id FROM Campaigns WHERE id = ?', [campaignId]);
-        if (!campaign) {
-             return res.status(404).json({ message: 'Kampagne nicht gefunden.' });
-        }
+        // const campaign = await getAsync(req.db, 'SELECT target_payment_id FROM Campaigns WHERE id = ?', [campaignId]);
+        // if (!campaign) {
+        //      return res.status(404).json({ message: 'Kampagne nicht gefunden.' });
+        // }
 
         // Erstellt den Payment Intent über Stripe (Betrag in Cent)
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: Math.round(amount * 100), 
+            amount: Math.round(amount * 100),
             currency: 'eur',
-            // WICHTIG: Wenn Sie Stripe Connect verwenden, um Geld an den Kampagnenersteller 
+            // WICHTIG: Wenn Sie Stripe Connect verwenden, um Geld an den Kampagnenersteller
             // zu senden, muss dies hier konfiguriert werden (z.B. transfer_data.destination).
             // Für ein einfaches Setup wird das Geld auf Ihrem Hauptkonto verbucht.
             metadata: { campaign_id: campaignId }
         });
-        
+
         // Gibt den geheimen Client-Schlüssel an das Frontend zurück
-        res.send({ clientSecret: paymentIntent.client_secret });
+        res.status(200).send({ clientSecret: paymentIntent.client_secret });
     } catch (e) {
         console.error("Stripe Fehler:", e.message);
         res.status(500).send({ error: e.message });
@@ -187,9 +189,9 @@ router.post('/donate/create-intent', async (req, res) => {
 router.post('/stripe-webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const payload = req.body;
     const sig = req.headers['stripe-signature'];
-    
+
     let event;
-    
+
     try {
         // Überprüft die Signatur des Webhooks, um sicherzustellen, dass er von Stripe kommt
         event = stripe.webhooks.constructEvent(payload, sig, STRIPE_WEBHOOK_SECRET);
@@ -217,9 +219,9 @@ router.post('/stripe-webhook', express.raw({ type: 'application/json' }), async 
 
             // 2. Kampagnenzähler aktualisieren und letzten Spender festlegen
             const updateSql = `
-                UPDATE Campaigns 
-                SET current_amount = current_amount + ?, 
-                    last_donor_name = ? 
+                UPDATE Campaigns
+                SET current_amount = current_amount + ?,
+                    last_donor_name = ?
                 WHERE id = ?
             `;
             await runAsync(req.db, updateSql, [amount, donorName, campaignId]);
@@ -230,7 +232,7 @@ router.post('/stripe-webhook', express.raw({ type: 'application/json' }), async 
             return res.status(500).send('Datenbankfehler');
         }
     }
-    
+
     // Antwortet an Stripe, dass das Ereignis erfolgreich empfangen wurde
     res.json({ received: true });
 });
@@ -247,7 +249,7 @@ router.post('/create-stripe-account', authorize, async (req, res) => {
     if (!accountId) {
         // Erstellung eines Express-Accounts. 'country' ist obligatorisch.
         const account = await stripe.accounts.create({
-            type: 'express', 
+            type: 'express',
             country: 'DE', // Muss das Land des Benutzers sein
             email: user.email,
             capabilities: {

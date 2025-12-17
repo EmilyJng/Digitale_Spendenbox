@@ -3,7 +3,8 @@ import { Home } from './home/home';
 import { Login } from './login/login';
 import { Dashboard } from './dashboard/dashboard';
 import { Donors } from './donors/donors';
-import { Campange } from './campange/campange';
+import { Campaign } from './campaign/campaign';
+import { Payment } from './payment/payment';
 
 export const routes: Routes = [
   {
@@ -23,7 +24,11 @@ export const routes: Routes = [
     component: Donors,
   },
   {
-    path: 'campangne',
-    component: Campange,
+    path: 'campaign',
+    component: Campaign,
+  },
+  {
+    path: 'checkout',
+    component: Payment,
   },
 ];

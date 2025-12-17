@@ -1,0 +1,51 @@
+@if (!elementsOptions.clientSecret) {
+<p-card header="Create Campagne" styleClass="campain-card">
+  <div class="campain-form">
+    <div class="field">
+      <label>Name</label>
+      <input type="text" pInputText [(ngModel)]="name" />
+    </div>
+    <div class="field">
+      <label>E-Mail</label>
+      <input type="text" pInputText [(ngModel)]="email" />
+    </div>
+    <div class="field">
+      <label>Straße</label>
+      <input type="text" pInputText [(ngModel)]="street" />
+    </div>
+    <div class="field">
+      <label>Postleitzahl</label>
+      <input type="text" pInputText [(ngModel)]="zipcode" />
+    </div>
+    <div class="field">
+      <label>Stadt</label>
+      <input type="text" pInputText [(ngModel)]="city" />
+    </div>
+    <div class="field">
+      <label>Betrag</label>
+      <p-inputnumber
+        mode="decimal"
+        inputId="withoutgrouping"
+        [useGrouping]="false"
+        [(ngModel)]="amount"
+      />
+    </div>
+    <div class="field">
+      <p-button label="Spenden starten" severity="secondary" (click)="startDonationProcess()" />
+    </div></div
+></p-card>
+} @if (elementsOptions.clientSecret) {
+<div class="flex h-full justify-center items-center">
+  <p-card class="h-1/2 w-1/2">
+    <div class="field">
+      <ngx-stripe-elements [stripe]="stripe" [elementsOptions]="elementsOptions">
+        <ngx-stripe-payment [options]="paymentElementOptions" />
+      </ngx-stripe-elements>
+    </div>
+    <div class="field">
+      <p-button label="Spenden" severity="secondary" (click)="pay()" />
+      <p-button label="Abbrechen" severity="secondary" />
+    </div>
+  </p-card>
+</div>
+}

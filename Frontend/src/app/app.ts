@@ -32,8 +32,8 @@ export class App {
       routerLink: '/',
     },
     {
-      label: 'Campangne',
-      routerLink: '/campangne',
+      label: 'Kampagnen',
+      routerLink: '/campaign',
     },
     {
       label: 'Dashboard',
