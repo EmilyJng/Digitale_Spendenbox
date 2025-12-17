@@ -1,7 +1,16 @@
-import { Component, signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, signal, ViewChild } from '@angular/core';
 import { FormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
-import { StripeCardElementOptions, StripeElementsOptions, StripePaymentElementOptions } from '@stripe/stripe-js';
-import { injectStripe, NgxStripeModule, StripePaymentElementComponent, StripeServiceInterface } from 'ngx-stripe';
+import {
+  StripeCardElementOptions,
+  StripeElementsOptions,
+  StripePaymentElementOptions,
+} from '@stripe/stripe-js';
+import {
+  injectStripe,
+  NgxStripeModule,
+  StripePaymentElementComponent,
+  StripeServiceInterface,
+} from 'ngx-stripe';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -9,9 +18,11 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { PaymentService } from '../paymentService';
-import { HttpClient } from '@angular/common/http';
+import { ToastModule } from 'primeng/toast';
 import { environment } from 'src/environments/environment';
 import { v4 as uuidv4 } from 'uuid';
+import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment',
@@ -23,8 +34,10 @@ import { v4 as uuidv4 } from 'uuid';
     DatePickerModule,
     CardModule,
     FileUploadModule,
-    ButtonModule
+    ButtonModule,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: './payment.html',
   styleUrl: './payment.css',
 })
@@ -39,13 +52,12 @@ export class Payment {
   city = '';
   amount = 0;
 
-
   elementsOptions: StripeElementsOptions = {
     locale: 'de',
     clientSecret: '',
     appearance: {
-      theme: 'flat'
-    }
+      theme: 'flat',
+    },
   };
 
   paymentElementOptions: StripePaymentElementOptions = {
@@ -53,26 +65,31 @@ export class Payment {
       type: 'tabs',
       defaultCollapsed: false,
       radios: false,
-      spacedAccordionItems: false
-    }
+      spacedAccordionItems: false,
+    },
   };
 
   stripe: StripeServiceInterface;
   paying = signal(false);
 
-  constructor(private paymentService: PaymentService) {
+  constructor(
+    private paymentService: PaymentService,
+    private messageService: MessageService,
+    private cdRef: ChangeDetectorRef,
+    private router: Router
+  ) {
     this.stripe = injectStripe(this.paymentService.getPublicKey());
   }
-
 
   async startDonationProcess() {
     this.paying.set(true);
     const clientSecret = (await this.createPaymentIntent()).clientSecret;
     this.elementsOptions.clientSecret = clientSecret;
     this.paying.set(false);
+    this.cdRef.detectChanges();
   }
 
-  async createPaymentIntent(){
+  async createPaymentIntent() {
     const response = await fetch(`${environment.backendBaseURI}/api/donate/create-intent`, {
       method: 'POST',
       headers: {
@@ -88,39 +105,44 @@ export class Payment {
   }
 
   pay() {
-      if (this.paying()) return;
-      this.paying.set(true);
+    if (this.paying()) return;
+    this.paying.set(true);
 
-      this.stripe
-        .confirmPayment({
-          elements: this.paymentElement.elements,
-          confirmParams: {
-            payment_method_data: {
-              billing_details: {
-                name: this.name,
-                email: this.email,
-                address: {
-                  line1: this.street,
-                  postal_code: this.zipcode,
-                  city: this.city
-                }
-              }
-            }
+    this.stripe
+      .confirmPayment({
+        elements: this.paymentElement.elements,
+        confirmParams: {
+          payment_method_data: {
+            billing_details: {
+              name: this.name,
+              email: this.email,
+              address: {
+                line1: this.street,
+                postal_code: this.zipcode,
+                city: this.city,
+              },
+            },
           },
-          redirect: 'if_required'
-        })
-        .subscribe(result => {
-          this.paying.set(false);
-          if (result.error) {
-            // Show error to your customer (e.g., insufficient funds)
-            alert({ success: false, error: result.error.message });
-          } else {
-            // The payment has been processed!
-            if (result.paymentIntent.status === 'succeeded') {
-              // Show a success message to your customer
-              alert("success");
-            }
+        },
+        redirect: 'if_required',
+      })
+      .subscribe((result) => {
+        this.paying.set(false);
+        if (result.error) {
+          // Show error to your customer (e.g., insufficient funds)
+          alert({ success: false, error: result.error.message });
+        } else {
+          // The payment has been processed!
+          if (result.paymentIntent.status === 'succeeded') {
+            // Show a success message to your customer
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Danke für Ihre Spende!',
+              detail: 'Ihre Spende wurde erfolgreich verarbeitet.',
+            });
+            this.router.navigateByUrl('/home');
           }
-        });
-    }
+        }
+      });
+  }
 }
