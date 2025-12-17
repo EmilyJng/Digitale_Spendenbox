@@ -6,6 +6,11 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { CardModule } from 'primeng/card';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
+import { Auth } from '../auth';
+import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-campain',
@@ -16,7 +21,7 @@ import { ButtonModule } from 'primeng/button';
     DatePickerModule,
     CardModule,
     FileUploadModule,
-    ButtonModule
+    ButtonModule,
   ],
   templateUrl: './campaign.html',
   styleUrl: './campaign.css',
@@ -28,8 +33,34 @@ export class Campaign {
   public endDate: Date = new Date();
   public imagePath: string = '';
 
+  constructor(private auth: Auth, private router: Router, private http: HttpClient) {}
+
   onUpload(event: any) {
     const file = event.files[0];
     this.imagePath = URL.createObjectURL(file);
+  }
+
+  createCampaign(): void {
+    this.http
+      .post(
+        `${environment.backendBaseURI}/api/campaigns`,
+        {
+          name: this.title,
+          description: this.describtion,
+          goal_amount: this.donationGoal,
+          image_url: this.imagePath,
+          target_payment_id: uuidv4(), // Placeholder, replace with actual payment ID
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${this.auth.getToken()}`,
+          },
+        }
+      )
+      .subscribe((response: any) => {
+        if (response && response.token) {
+          console.log(response);
+        }
+      });
   }
 }

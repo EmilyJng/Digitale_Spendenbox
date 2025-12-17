@@ -1,1 +1,24 @@
-<p-button label="Click Me">Test</p-button>
+@for (item of campaigns; track item) {
+<p-card styleClass="campain-card">
+  <div class="campain-form">
+    <div class="field">
+      <label class="text-2xl">{{ item.name }}</label>
+    </div>
+    <div class="field">
+      <label class="text-1xl">Spendenziel: {{ item.goal_amount }} €</label>
+    </div>
+    <div class="field">
+      <label class="text-1xl">Beschreibung: </label>
+      <p class="font-[julius-sans-one] font-thin descriptionText">{{ item.description }}</p>
+    </div>
+    <div class="field">
+      <label class="text-1xl">Aktueller Spendenstand: </label>
+      <p-progressbar [value]="item.current_amount">
+        <ng-template #content let-value>
+          <span>{{ value }}/{{ item.goal_amount }}</span>
+        </ng-template>
+      </p-progressbar>
+    </div>
+  </div>
+</p-card>
+}

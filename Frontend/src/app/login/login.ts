@@ -24,10 +24,5 @@ export class Login {
 
   login() {
     const isLoggedIn = this.auth.login(this.username, this.password);
-    if (isLoggedIn()) {
-      this.router.navigateByUrl('/dashboard');
-    } else {
-      this.serverError = 'Invalid username or password';
-    }
   }
 }

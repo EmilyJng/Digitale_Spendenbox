@@ -5,3 +5,12 @@ body {
   height: 100dvh;
   width: 100dvw;
 }
+
+/* julius-sans-one-regular - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Julius Sans One';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../Frontend/public/fonts/julius-sans-one-v20-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
