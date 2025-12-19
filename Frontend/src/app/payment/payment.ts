@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, input, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule, UntypedFormBuilder, Validators } from '@angular/forms';
 import {
   StripeCardElementOptions,
@@ -23,6 +23,7 @@ import { environment } from 'src/environments/environment';
 import { v4 as uuidv4 } from 'uuid';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { CampaignService } from '../campaign-service';
 
 @Component({
   selector: 'app-payment',
@@ -44,6 +45,8 @@ import { Router } from '@angular/router';
 export class Payment {
   @ViewChild(StripePaymentElementComponent)
   paymentElement!: StripePaymentElementComponent;
+  campaignId = input<string>();
+  campaignHeader = "";
 
   name = '';
   email = '';
@@ -76,9 +79,22 @@ export class Payment {
     private paymentService: PaymentService,
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private campaignService: CampaignService
   ) {
     this.stripe = injectStripe(this.paymentService.getPublicKey());
+
+    effect(() => {
+         const campaignId = this.campaignId();
+         if(campaignId){
+           this.setCampaignHeader(campaignId);
+         }
+       });
+  }
+
+  setCampaignHeader(campaignId: string) {
+    const campaign = this.campaignService.getCampaigns().find(c => c.id == campaignId);
+    this.campaignHeader = `Spende für Kampagne ${campaign?.name || campaignId}`;
   }
 
   async startDonationProcess() {
@@ -126,7 +142,7 @@ export class Payment {
         },
         redirect: 'if_required',
       })
-      .subscribe((result) => {
+      .subscribe(async (result) => {
         this.paying.set(false);
         if (result.error) {
           // Show error to your customer (e.g., insufficient funds)
@@ -134,6 +150,25 @@ export class Payment {
         } else {
           // The payment has been processed!
           if (result.paymentIntent.status === 'succeeded') {
+
+
+
+            const donationData = {
+              amount: this.amount,
+              campaignId: this.campaignId(),
+              name: this.name,
+              paymentIntentId: result.paymentIntent.id
+            };
+
+            console.log(donationData)
+
+            await fetch(`${environment.backendBaseURI}/api/donate/confirm`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(donationData),
+            });
             // Show a success message to your customer
             this.messageService.add({
               severity: 'success',

@@ -25,6 +25,7 @@
         "express": "^5.1.0",
         "lucide-angular": "^0.556.0",
         "ngx-stripe": "^21.8.0",
+        "primeicons": "^7.0.0",
         "primeng": "^21.0.1",
         "rxjs": "~7.8.0",
         "tailwind-merge": "^3.4.0",
@@ -1081,6 +1082,8 @@
     "postcss": ["postcss@8.5.6", "", { "dependencies": { "nanoid": "^3.3.11", "picocolors": "^1.1.1", "source-map-js": "^1.2.1" } }, "sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg=="],
 
     "postcss-media-query-parser": ["postcss-media-query-parser@0.2.3", "", {}, "sha512-3sOlxmbKcSHMjlUXQZKQ06jOswE7oVkXPxmZdoB1r5l0q6gTFTQSHxNxOrCccElbW7dxNytifNEo8qidX2Vsig=="],
+
+    "primeicons": ["primeicons@7.0.0", "", {}, "sha512-jK3Et9UzwzTsd6tzl2RmwrVY/b8raJ3QZLzoDACj+oTJ0oX7L9Hy+XnVwgo4QVKlKpnP/Ur13SXV/pVh4LzaDw=="],
 
     "primeng": ["primeng@21.0.1", "", { "dependencies": { "@primeuix/motion": "^0.0.10", "@primeuix/styled": "^0.7.4", "@primeuix/styles": "^2.0.2", "@primeuix/utils": "^0.6.3", "tslib": "^2.3.0" }, "peerDependencies": { "@angular/cdk": "^21.0.0", "@angular/common": "^21.0.0", "@angular/core": "^21.0.0", "@angular/forms": "^21.0.0", "@angular/platform-browser": "^21.0.0", "@angular/router": "^21.0.0", "rxjs": "^6.0.0 || ^7.8.1" } }, "sha512-lCmMpr2cgL4r/HPByMnrKTPgwYJAQhMDbtu/u8VL3Otnzs8KSKY7bmSnH6cqvucsk8lr/VSKJTxbssb9gtmOVg=="],
 

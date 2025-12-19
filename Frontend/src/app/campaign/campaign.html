@@ -22,19 +22,8 @@
       <p-datepicker [(ngModel)]="endDate" [showIcon]="true" inputId="buttondisplay" />
     </div>
     <div class="field">
-      <label>Kampagnenbild</label>
-      <p-fileupload
-        #fu
-        mode="basic"
-        chooseLabel="Choose"
-        chooseIcon="pi pi-upload"
-        name="demo[]"
-        url="https://www.primefaces.org/cdn/api/upload.php"
-        accept="image/*"
-        maxFileSize="1000000"
-        (onUpload)="onUpload($event)"
-      />
-      <p-button label="Upload" (onClick)="fu.upload()" severity="secondary" />
+      <label>Bild-URL</label>
+      <input type="text" pInputText [(ngModel)]="imagePath" />
     </div>
     <div>
       <p-button (onClick)="createCampaign()">Kampagne erstellen</p-button>

@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS Campaigns (
     image_url TEXT,
     is_active BOOLEAN DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+    end_date DATETIME NOT NULL,
+
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
 
@@ -29,13 +30,13 @@ CREATE TABLE IF NOT EXISTS Donations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     campaign_id INTEGER NOT NULL,
     amount REAL NOT NULL,
-    donor_name TEXT, 
+    donor_name TEXT,
     -- Speichern des letzten Spenders in der Campaign-Tabelle ist besser für Performance
     -- Das Payment Intent ID von Stripe kann hier zur Verfolgung gespeichert werden
     payment_intent_id TEXT UNIQUE NOT NULL,
     payment_status TEXT NOT NULL, -- z.B. 'succeeded', 'pending', 'failed'
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    
+
     FOREIGN KEY (campaign_id) REFERENCES Campaigns(id)
 );
 

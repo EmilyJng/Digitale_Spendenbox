@@ -33,7 +33,11 @@ export class Campaign {
   public endDate: Date = new Date();
   public imagePath: string = '';
 
-  constructor(private auth: Auth, private router: Router, private http: HttpClient) {}
+  constructor(private auth: Auth, private router: Router, private http: HttpClient) {
+    if(!this.auth.isLoggedIn()) {
+      this.router.navigateByUrl('/login');
+    }
+  }
 
   onUpload(event: any) {
     const file = event.files[0];
@@ -50,6 +54,7 @@ export class Campaign {
           goal_amount: this.donationGoal,
           image_url: this.imagePath,
           target_payment_id: uuidv4(), // Placeholder, replace with actual payment ID
+          end_date: this.endDate
         },
         {
           headers: {

@@ -1,8 +1,14 @@
-@for (item of campaigns; track item) {
+@for (item of campaigns; track item) { @if (item) {
 <p-card styleClass="campain-card">
+  @if (item.image_url) {
+  <ng-template #header>
+    <img alt="Card" class="w-full" [src]="item.image_url" />
+  </ng-template>
+  }
   <div class="campain-form">
-    <div class="field">
+    <div class="flex flex-row justify-between items-center">
       <label class="text-2xl">{{ item.name }}</label>
+      <div class="pi pi-plus-circle cursor-pointer" (click)="openCampaign(item)"></div>
     </div>
     <div class="field">
       <label class="text-1xl">Spendenziel: {{ item.goal_amount }} €</label>
@@ -13,12 +19,14 @@
     </div>
     <div class="field">
       <label class="text-1xl">Aktueller Spendenstand: </label>
-      <p-progressbar [value]="item.current_amount">
+      <p-progressbar [value]="item.current_amount / item.goal_amount * 100">
         <ng-template #content let-value>
-          <span>{{ value }}/{{ item.goal_amount }}</span>
+          <span>{{value}}%</span>
         </ng-template>
       </p-progressbar>
     </div>
   </div>
 </p-card>
+} } @empty {
+<span>Keine Kampagnen gefunden</span>
 }

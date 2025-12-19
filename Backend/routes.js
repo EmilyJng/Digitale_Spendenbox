@@ -107,7 +107,7 @@ router.post("/login", async (req, res) => {
 router.get("/campaigns", async (req, res) => {
   try {
     const sql = `
-            SELECT id, name, description, goal_amount, current_amount, image_url
+            SELECT id, name, description, goal_amount, current_amount, image_url, end_date
             FROM Campaigns
             WHERE is_active = 1
             ORDER BY created_at DESC
@@ -136,20 +136,20 @@ router.get("/campaigns", async (req, res) => {
 
 // Eigene Spendenaktion erstellen (Geschützt durch authorize Middleware)
 router.post("/campaigns", authorize, async (req, res) => {
-  const { name, goal_amount, target_payment_id, image_url, description } =
+  const { name, goal_amount, target_payment_id, image_url, description, end_date } =
     req.body;
   const userId = req.userId; // Aus dem JWT-Token
 
-  if (!name || !goal_amount || !target_payment_id) {
+  if (!name || !goal_amount || !target_payment_id || !end_date) {
     return res.status(400).json({
-      message: "Name, Zielbetrag und Bankkonto (Ziel-ID) sind erforderlich.",
+      message: "Name, Zielbetrag, Bankkonto (Ziel-ID) und Enddatum sind erforderlich.",
     });
   }
 
   try {
     const sql = `
-            INSERT INTO Campaigns (user_id, name, goal_amount, target_payment_id, image_url, description)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO Campaigns (user_id, name, goal_amount, target_payment_id, image_url, description, end_date)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
     const result = await runAsync(req.db, sql, [
       userId,
@@ -158,6 +158,7 @@ router.post("/campaigns", authorize, async (req, res) => {
       target_payment_id,
       image_url,
       description,
+      end_date
     ]);
 
     res.status(201).json({
@@ -326,5 +327,30 @@ router.post("/create-stripe-account", authorize, async (req, res) => {
   // 4. Weiterleitung an das Frontend senden
   res.json({ url: accountLink.url });
 });
+
+router.post('/donate/confirm', async (req, res) => {
+  const payload = req.body;
+  const { amount, campaignId, name, paymentIntentId } = payload;
+
+  const insertSql = `
+          INSERT INTO Donations (campaign_id, amount, donor_name, payment_intent_id, payment_status)
+          VALUES (?, ?, ?, ?, 'succeeded')
+      `;
+
+  const updateSql = `
+          UPDATE Campaigns
+          SET current_amount = current_amount + ?
+          WHERE id = ?
+      `;
+  await runAsync(req.db, insertSql, [
+    campaignId,
+    amount,
+    name,
+    paymentIntentId,
+  ]);
+  await runAsync(req.db, updateSql, [amount, campaignId]);
+  res.status(200).json({ message: 'Donation confirmed' });
+})
+
 
 module.exports = router;
