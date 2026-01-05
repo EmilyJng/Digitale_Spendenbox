@@ -136,13 +136,20 @@ router.get("/campaigns", async (req, res) => {
 
 // Eigene Spendenaktion erstellen (Geschützt durch authorize Middleware)
 router.post("/campaigns", authorize, async (req, res) => {
-  const { name, goal_amount, target_payment_id, image_url, description, end_date } =
-    req.body;
+  const {
+    name,
+    goal_amount,
+    target_payment_id,
+    image_url,
+    description,
+    end_date,
+  } = req.body;
   const userId = req.userId; // Aus dem JWT-Token
 
   if (!name || !goal_amount || !target_payment_id || !end_date) {
     return res.status(400).json({
-      message: "Name, Zielbetrag, Bankkonto (Ziel-ID) und Enddatum sind erforderlich.",
+      message:
+        "Name, Zielbetrag, Bankkonto (Ziel-ID) und Enddatum sind erforderlich.",
     });
   }
 
@@ -158,7 +165,7 @@ router.post("/campaigns", authorize, async (req, res) => {
       target_payment_id,
       image_url,
       description,
-      end_date
+      end_date,
     ]);
 
     res.status(201).json({
@@ -328,7 +335,7 @@ router.post("/create-stripe-account", authorize, async (req, res) => {
   res.json({ url: accountLink.url });
 });
 
-router.post('/donate/confirm', async (req, res) => {
+router.post("/donate/confirm", async (req, res) => {
   const payload = req.body;
   const { amount, campaignId, name, paymentIntentId } = payload;
 
@@ -349,8 +356,21 @@ router.post('/donate/confirm', async (req, res) => {
     paymentIntentId,
   ]);
   await runAsync(req.db, updateSql, [amount, campaignId]);
-  res.status(200).json({ message: 'Donation confirmed' });
-})
+  res.status(200).json({ message: "Donation confirmed" });
+});
 
+// ====================================================================
+// 6. Kontaktformular ROUTE/ Logging
+// ====================================================================
+
+router.post("/contactform/message", async (req, res) => {
+  const { name, email, betreff, anliegen } = req.body;
+  console.log("Kontaktformular Nachricht erhalten:", {
+    name,
+    email,
+    subject,
+    message,
+  });
+});
 
 module.exports = router;

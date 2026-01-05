@@ -1,0 +1,22 @@
+<p-card header="Kontaktformular" styleClass="campain-card">
+  <div class="campain-form">
+    <div class="field">
+      <label>Name</label>
+      <input type="text" pInputText [(ngModel)]="name" />
+    </div>
+    <div class="field">
+      <label>E-Mail</label>
+      <input type="text" pInputText [(ngModel)]="email" />
+    </div>
+    <div class="field">
+      <label>Betreff</label>
+      <input type="text" pInputText [(ngModel)]="subject" />
+    </div>
+    <div class="field">
+      <label>Anliegen</label>
+      <input type="text" pInputText [(ngModel)]="message" />
+    </div>
+    <div class="field">
+      <p-button label="Abschicken" severity="secondary" (click)="sendContactMessage()" />
+    </div></div
+></p-card>

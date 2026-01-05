@@ -39,5 +39,9 @@ export class App {
       label: 'Dashboard',
       routerLink: '/dashboard',
     },
+    {
+      label: 'Kontakt',
+      routerLink: '/contactform',
+    },
   ];
 }

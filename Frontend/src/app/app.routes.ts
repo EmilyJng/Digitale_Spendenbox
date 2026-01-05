@@ -5,6 +5,7 @@ import { Dashboard } from './dashboard/dashboard';
 import { Donors } from './donors/donors';
 import { Campaign } from './campaign/campaign';
 import { Payment } from './payment/payment';
+import { Contactform } from './contactform/contactform';
 
 export const routes: Routes = [
   {
@@ -30,5 +31,9 @@ export const routes: Routes = [
   {
     path: 'checkout/:campaignId',
     component: Payment,
+  },
+  {
+    path: 'contactform',
+    component: Contactform,
   },
 ];
