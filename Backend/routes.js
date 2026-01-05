@@ -125,6 +125,13 @@ router.get("/campaigns", async (req, res) => {
       campaign.last_donor_name = lastDonor
         ? lastDonor.donor_name
         : "Noch keine Spende";
+
+      const donorAmount = await getAsync(
+        req.db,
+        'SELECT amount FROM Donations WHERE campaign_id = ? AND payment_status = "succeeded" ORDER BY created_at DESC LIMIT 1',
+        [campaign.id]
+      );
+      campaign.last_donor_amount = donorAmount ? donorAmount.amount : 0;
     }
 
     res.json(campaigns);

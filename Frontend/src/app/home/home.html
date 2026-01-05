@@ -19,11 +19,16 @@
     </div>
     <div class="field">
       <label class="text-1xl">Aktueller Spendenstand: </label>
-      <p-progressbar [value]="(item.current_amount / item.goal_amount) * 100">
+      <p-progressbar [value]="getDonationProgress(item)">
         <ng-template #content let-value>
           <span>{{ value }}%</span>
         </ng-template>
       </p-progressbar>
+    </div>
+    <div class="field">
+      <label class="text-1xl">
+        {{ getFirstLetter(item.last_donor_name) }}. spendete {{ item.last_donor_amount }} €
+      </label>
     </div>
   </div>
 </p-card>

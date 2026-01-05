@@ -17,7 +17,13 @@ import { CampaignService } from '../campaign-service';
 export class Home implements OnInit {
   campaigns: Array<any> = [];
 
-  constructor(private http: HttpClient, private auth: Auth, private cdRef: ChangeDetectorRef, private router: Router, private campaignService: CampaignService) {}
+  constructor(
+    private http: HttpClient,
+    private auth: Auth,
+    private cdRef: ChangeDetectorRef,
+    private router: Router,
+    private campaignService: CampaignService
+  ) {}
 
   ngOnInit() {
     this.http
@@ -36,5 +42,13 @@ export class Home implements OnInit {
 
   openCampaign(campaign: any) {
     this.router.navigateByUrl(`/checkout/${campaign.id}`);
+  }
+
+  getFirstLetter(str: string): string {
+    return str.charAt(0).toUpperCase();
+  }
+
+  getDonationProgress(item: any): number {
+    return Math.floor((item.current_amount / item.goal_amount) * 100);
   }
 }
