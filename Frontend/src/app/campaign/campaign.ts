@@ -34,7 +34,7 @@ export class Campaign {
   public imagePath: string = '';
 
   constructor(private auth: Auth, private router: Router, private http: HttpClient) {
-    if(!this.auth.isLoggedIn()) {
+    if (!this.auth.isLoggedIn()) {
       this.router.navigateByUrl('/login');
     }
   }
@@ -54,7 +54,7 @@ export class Campaign {
           goal_amount: this.donationGoal,
           image_url: this.imagePath,
           target_payment_id: uuidv4(), // Placeholder, replace with actual payment ID
-          end_date: this.endDate
+          end_date: this.endDate,
         },
         {
           headers: {
