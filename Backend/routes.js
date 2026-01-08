@@ -371,7 +371,7 @@ router.post("/donate/confirm", async (req, res) => {
 // ====================================================================
 
 router.post("/contactform/message", async (req, res) => {
-  const { name, email, betreff, anliegen } = req.body;
+  const { name, email, subject, message } = req.body;
   console.log("Kontaktformular Nachricht erhalten:", {
     name,
     email,
